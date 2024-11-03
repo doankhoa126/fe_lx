@@ -5,7 +5,7 @@ import DepositDocument from './Pagedeposit'; // Giả định bạn có một co
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import trang2 from './imgLocalPage/trang2.jpg'; // Đường dẫn tới hình ảnh trang 2
-
+import supabase from './supabaseClient';
 const PrintPage = () => {
     const [formData, setFormData] = useState({
         tenKhachHang: '',
@@ -29,10 +29,61 @@ const PrintPage = () => {
     const handleDocumentChange = (event) => {
         setSelectedDocument(event.target.value); // Update selected document
     };
-
+    const saveDataFromLocalStorageToSupabase = async () => {
+        // 1. Lấy dữ liệu từ localStorage
+        const jsonData = localStorage.getItem('latestQrData'); // Giả sử dữ liệu JSON được lưu với key 'warrantyDocumentData'
+       
+        // Kiểm tra nếu dữ liệu không tồn tại trong localStorage
+        if (!jsonData) {
+            console.error('Không có dữ liệu trong localStorage với key "warrantyDocumentData".');
+            return;
+        }
+    
+        try {
+            // 2. Chuyển chuỗi JSON thành đối tượng JavaScript
+            const data = JSON.parse(jsonData);
+            console.log("data",data.customerName);
+            // 3. Chuẩn bị đối tượng để lưu vào Supabase
+            const documentData = {
+                tenkhachhang: data.customerName,
+                sdtkhachhang: data.customerPhone,
+                vts_thulai: data.vtsThuLai || '', // Nếu vts_thulai không có trong dữ liệu thì dùng chuỗi rỗng
+                vts_doimoi: data.vtsDoiMoi || '',
+                kimcuong_thulai: data.kimCuongThuLai || '',
+                kimcuong_doilon: data.kimCuongDoiLon || '',
+                masanpham: data.productCode,
+                thongso: data.specification,
+                size: data.size,
+                giatri: data.productValue,
+                mavienchu: data.mainStoneCode,
+                kiemdinh: data.certification,
+                thongso_vienchu: data.mainStoneSpecification,
+                tonggiatri: data.totalValue,
+                coctruoc: data.deposit || '', // Có thể là một trường bổ sung, nếu không tồn tại thì đặt giá trị mặc định
+                conlai: data.remainingBalance || '',
+                loai_giay: data.selectedDocument || 'warranty' // Lấy từ dữ liệu hoặc đặt mặc định là 'warranty'
+            };
+    
+            // 4. Lưu dữ liệu vào Supabase
+            const { error } = await supabase
+                .from('page') // Thay 'page' bằng tên bảng trong Supabase của bạn
+                .insert([documentData]);
+    
+            // 5. Kiểm tra lỗi từ Supabase
+            if (error) {
+                console.error('Lỗi khi lưu dữ liệu lên Supabase:', error.message);
+            } else {
+                console.log('Dữ liệu đã được lưu thành công lên Supabase');
+            }
+        } catch (error) {
+            console.error('Lỗi khi phân tích dữ liệu JSON:', error);
+        }
+    };
+    
+    
     const handleExportPDF = () => {
         const input = document.getElementById(selectedDocument === 'warranty' ? 'warrantyDocument' : 'depositDocument'); // Adjust to get the correct document
-
+        saveDataFromLocalStorageToSupabase()
         // Bước 1: Xuất trang đầu tiên (WarrantyDocument)
         html2canvas(input, {
             scale: 2, // Tăng độ phân giải

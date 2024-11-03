@@ -60,7 +60,7 @@ function ResponsiveDrawer(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Responsive drawer
+            TAM LUXURY FE BETA
           </Typography>
         </Toolbar>
       </AppBar>

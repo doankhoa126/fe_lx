@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import bieutuong from './imgLocalPage/bieutuong.png';
 import footer from './imgLocalPage/footer2.png';
 import header from './imgLocalPage//header2.png';
+import { QRCodeCanvas } from 'qrcode.react'; // Import QRCodeCanvas instead of QRCode
+
 const WarrantyDocument = () => {
     const [customerName, setCustomerName] = useState('');
     const [customerPhone, setCustomerPhone] = useState('');
@@ -24,6 +26,12 @@ const WarrantyDocument = () => {
 
     const [specification1, setSpecification1] = useState('');
     const [specification2, setSpecification2] = useState('');
+
+    const [vtsThuLai, setVtsThuLai] = useState('');
+    const [vtsDoiMoi, setVtsDoiMoi] = useState('');
+    const [kimCuongThuLai, setKimCuongThuLai] = useState('');
+    const [kimCuongDoiLon, setKimCuongDoiLon] = useState('');
+
     useEffect(() => {
         const today = new Date();
         const day = today.getDate().toString().padStart(2, '0');
@@ -135,6 +143,33 @@ const WarrantyDocument = () => {
         event.preventDefault();
     };
 
+
+    // Dữ liệu mã QR
+    const qrData = JSON.stringify({
+        customerName,
+        customerPhone,
+        vtsThuLai,
+        vtsDoiMoi,
+        kimCuongThuLai,
+        kimCuongDoiLon,
+        productCode,
+        specification,
+        size,
+        productValue,
+        mainStoneCode,
+        mainStoneSpecification,
+        certification,
+        mainStoneValue,
+        totalValue,
+        valueInWords,
+        currentDate
+    });
+    useEffect(() => {
+        if (qrData) {
+            localStorage.setItem('latestQrData', qrData);
+            console.log("QR data saved to localStorage:", qrData);
+        }
+    }, [qrData]);
     return (
         <div id="warrantyDocument" style={{ margin: '0 auto', fontFamily: '"EB Garamond", serif', background: '#000', color: '#333', paddingRight: '0.5mm', paddingLeft: '4mm', paddingTop: '0.5mm', paddingBottom: '0.5mm', boxSizing: 'border-box', width: '390mm', }}>
             <div className="header" style={{ background: `url(${header}) no-repeat center center`, backgroundSize: 'cover', color: '#D4AF37', padding: '5mm 5mm', display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center' }}>
@@ -191,14 +226,15 @@ const WarrantyDocument = () => {
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <div>
                                         <strong>VỎ TRANG SỨC</strong>
-                                        <div>Thu lại: <input type="text" onChange={(e) => { }} style={inputStyle} /></div>
-                                        <div>Đổi lớn: <input type="text" onChange={(e) => { }} style={inputStyle} /></div>
+                                        <div>Thu lại: <input type="text" value={vtsThuLai} onChange={(e) => setVtsThuLai(e.target.value)} style={inputStyle} /></div>
+                                        <div>Đổi lớn: <input type="text" value={vtsDoiMoi} onChange={(e) => setVtsDoiMoi(e.target.value)} style={inputStyle} /></div>
                                     </div>
                                     <div>
                                         <strong>KIM CƯƠNG CHỦ</strong>
-                                        <div>Thu lại: <input type="text" onChange={(e) => { }} style={inputStyle} /></div>
-                                        <div>Đổi lớn: <input type="text" onChange={(e) => { }} style={inputStyle} /></div>
+                                        <div>Thu lại: <input type="text" value={kimCuongThuLai} onChange={(e) => setKimCuongThuLai(e.target.value)} style={inputStyle} /></div>
+                                        <div>Đổi lớn: <input type="text" value={kimCuongDoiLon} onChange={(e) => setKimCuongDoiLon(e.target.value)} style={inputStyle} /></div>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -219,9 +255,9 @@ const WarrantyDocument = () => {
                     {/* Product Information Section */}
                     <div>
                         <div className="section-header" style={sectionHeaderStyle}>THÔNG TIN SẢN PHẨM</div>
-                        <h3 style={{ textAlign: 'center', marginTop: '10px', marginBottom: '10px', fontSize:'20px'}}> VỎ TRANG SỨC</h3>
+                        <h3 style={{ textAlign: 'center', marginTop: '10px', marginBottom: '10px', fontSize: '20px' }}> VỎ TRANG SỨC</h3>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px',fontSize: '0.9em' }}>MÃ SẢN PHẨM:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>MÃ SẢN PHẨM:</label>
                             <input type="text" value={productCode} onChange={(e) => setProductCode(e.target.value)} style={inputStyle2} />
                         </div>
 
@@ -231,7 +267,7 @@ const WarrantyDocument = () => {
 
 
                             <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                                <label style={{ display: 'inline-block', width: '160px',fontSize: '0.9em' }}>THÔNG SỐ:</label>
+                                <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>THÔNG SỐ:</label>
                                 <input type="text" value={specification} onChange={(e) => setSpecification(e.target.value)} style={inputStyle2} />
                             </div>
 
@@ -243,25 +279,25 @@ const WarrantyDocument = () => {
                             </div>
                         </div>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px' ,fontSize: '0.9em'}}>SIZE (Ni Tay):</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>SIZE (Ni Tay):</label>
                             <input type="text" value={size} onChange={(e) => setSize(e.target.value)} style={inputStyle2} />
                         </div>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px' ,fontSize: '0.9em'}}>GIÁ TRỊ:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>GIÁ TRỊ:</label>
                             <input type="text" value={productValue} onChange={(e) => setProductValue(e.target.value)} style={inputStyle2} />
                         </div>
 
-                        <h3 style={{ textAlign: 'center', marginTop: '10px', marginBottom: '10px', fontSize:'20px' }}>VIÊN CHỦ</h3>
+                        <h3 style={{ textAlign: 'center', marginTop: '10px', marginBottom: '10px', fontSize: '20px' }}>VIÊN CHỦ</h3>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px',fontSize: '0.9em' }}>MÃ VIÊN CHỦ:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>MÃ VIÊN CHỦ:</label>
                             <input type="text" value={mainStoneCode} onChange={(e) => setMainStoneCode(e.target.value)} style={inputStyle2} />
                         </div>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px',fontSize: '0.9em' }}>THÔNG SỐ:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>THÔNG SỐ:</label>
                             <input type="text" value={mainStoneSpecification} onChange={(e) => setMainStoneSpecification(e.target.value)} style={inputStyle2} />
                         </div>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px' ,fontSize: '0.9em'}}>KIỂM ĐỊNH:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>KIỂM ĐỊNH:</label>
                             <input type="text" value={certification} onChange={(e) => setCertification(e.target.value)} style={inputStyle2} />
                         </div>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
@@ -269,16 +305,16 @@ const WarrantyDocument = () => {
                         </div>
 
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px',fontSize: '0.9em' }}>GIÁ TRỊ:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>GIÁ TRỊ:</label>
                             <input type="text" value={mainStoneValue} onChange={(e) => setMainStoneValue(e.target.value)} style={inputStyle2} />
                         </div>
 
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px' ,fontSize: '0.9em'}}>TỔNG GIÁ TRỊ:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>TỔNG GIÁ TRỊ:</label>
                             <input type="text" value={totalValue} onChange={(e) => setTotalValue(e.target.value)} style={inputStyle2} />
                         </div>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px' ,fontSize: '0.9em'}}>TỔNG GIÁ TRỊ BẰNG CHỮ:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>TỔNG GIÁ TRỊ BẰNG CHỮ:</label>
                             <input type="text" value={valueInWords} onChange={(e) => setValueInWords(e.target.value)} style={inputStyle2} />
                         </div>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
@@ -367,7 +403,9 @@ const WarrantyDocument = () => {
                 height: '100px',
             }}>
 
-
+                <div style={{ marginTop: '2px', textAlign: 'right', marginRight: '10px' }}>
+                    <QRCodeCanvas value={qrData} size={75} />
+                </div>
 
             </div>
         </div>

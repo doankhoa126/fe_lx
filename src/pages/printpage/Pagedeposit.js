@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import bieutuong from './imgLocalPage/bieutuong.png';
 import footer from './imgLocalPage/footer2.png';
 import header from './imgLocalPage//header2.png';
+import { QRCodeCanvas } from 'qrcode.react'; // Import thư viện QRCodeCanvas
 
 const DepositDocument = () => {
     const [customerName, setCustomerName] = useState('');
@@ -29,6 +30,11 @@ const DepositDocument = () => {
     const [specification1, setSpecification1] = useState('');
     const [specification2, setSpecification2] = useState('');
 
+    const [vtsThuLai, setVtsThuLai] = useState('');
+    const [vtsDoiMoi, setVtsDoiMoi] = useState('');
+    const [kimCuongThuLai, setKimCuongThuLai] = useState('');
+    const [kimCuongDoiLon, setKimCuongDoiLon] = useState('');
+    const [combinedSpecification, setCombinedSpecification] = useState(''); // Thêm biến trạng thái này
 
     const handleSizeChange = (index, value) => {
         const newValues = [...sizeValues];
@@ -171,6 +177,41 @@ const DepositDocument = () => {
     const handleDragOver = (event) => {
         event.preventDefault();
     };
+    useEffect(() => {
+        const newCombinedSpecification = `${specification} - ${specification1} - ${specification2}`;
+        setCombinedSpecification(newCombinedSpecification);
+    }, [specification, specification1, specification2]);
+
+
+    const qrData = JSON.stringify({
+        customerName,
+        customerPhone,
+        vtsThuLai,
+        vtsDoiMoi,
+        kimCuongThuLai,
+        kimCuongDoiLon,
+        productCode,
+        specification: `${specification} - ${specification1} - ${specification2}`, // Combine directly here
+        size,
+        productValue,
+        mainStoneCode,
+        mainStoneSpecification,
+        certification,
+        mainStoneValue,
+        totalValue,
+        deposit,
+        remainingBalance,
+        currentDate
+    }); if (combinedSpecification) {
+        localStorage.setItem('latestQrData', qrData);
+        console.log("QR data saved to localStorage:", qrData);
+    }
+    useEffect(() => {
+        if (qrData) {
+            localStorage.setItem('latestQrData', qrData);
+            console.log("QR data saved to localStorage:", qrData);
+        }
+    }, [qrData]);
 
     return (
         <div id="depositDocument" style={{ margin: '0 auto', fontFamily: '"EB Garamond", serif', background: '#000', color: '#333', paddingRight: '0.5mm', paddingLeft: '4mm', paddingTop: '0.5mm', paddingBottom: '0.5mm', boxSizing: 'border-box', width: '390mm', }}>
@@ -200,7 +241,7 @@ const DepositDocument = () => {
     style={titleStyle}
     <
 /> */}
-                <h1 style={titleStyle}>GIẤY ĐẢM BẢO</h1>
+                <h1 style={titleStyle}>GIẤY ĐẶT CỌC</h1>
                 {/* Nếu có các thành phần khác trong header, bạn có thể thêm vào đây */}
 
                 <div style={{ textAlign: 'center' }}>
@@ -227,13 +268,13 @@ const DepositDocument = () => {
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <div>
                                         <strong>VỎ TRANG SỨC</strong>
-                                        <div>Thu lại: <input type="text" onChange={(e) => { }} style={inputStyle} /></div>
-                                        <div>Đổi lớn: <input type="text" onChange={(e) => { }} style={inputStyle} /></div>
+                                        <div>Thu lại: <input type="text" value={vtsThuLai} onChange={(e) => setVtsThuLai(e.target.value)} style={inputStyle} /></div>
+                                        <div>Đổi lớn: <input type="text" value={vtsDoiMoi} onChange={(e) => setVtsDoiMoi(e.target.value)} style={inputStyle} /></div>
                                     </div>
                                     <div>
                                         <strong>KIM CƯƠNG CHỦ</strong>
-                                        <div>Thu lại: <input type="text" onChange={(e) => { }} style={inputStyle} /></div>
-                                        <div>Đổi lớn: <input type="text" onChange={(e) => { }} style={inputStyle} /></div>
+                                        <div>Thu lại: <input type="text" value={kimCuongThuLai} onChange={(e) => setKimCuongThuLai(e.target.value)} style={inputStyle} /></div>
+                                        <div>Đổi lớn: <input type="text" value={kimCuongDoiLon} onChange={(e) => setKimCuongDoiLon(e.target.value)} style={inputStyle} /></div>
                                     </div>
                                 </div>
                             </div>
@@ -257,7 +298,7 @@ const DepositDocument = () => {
                         <div className="section-header" style={sectionHeaderStyle}>THÔNG TIN SẢN PHẨM</div>
                         <h3 style={{ textAlign: 'center' }}> VỎ TRANG SỨC</h3>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px',fontSize: '0.9em'  }}>MÃ SẢN PHẨM:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>MÃ SẢN PHẨM:</label>
                             <input type="text" value={productCode} onChange={(e) => setProductCode(e.target.value)} style={inputStyle2} />
                         </div>
 
@@ -267,7 +308,7 @@ const DepositDocument = () => {
 
 
                             <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                                <label style={{ display: 'inline-block', width: '160px',fontSize: '0.9em'  }}>THÔNG SỐ:</label>
+                                <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>THÔNG SỐ:</label>
                                 <input type="text" value={specification} onChange={(e) => setSpecification(e.target.value)} style={inputStyle2} />
                             </div>
 
@@ -280,39 +321,39 @@ const DepositDocument = () => {
                         </div>
 
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px' ,fontSize: '0.9em' }}>SIZE (Ni Tay):</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>SIZE (Ni Tay):</label>
                             <input type="text" value={size} onChange={(e) => setSize(e.target.value)} style={inputStyle2} />
                         </div>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px',fontSize: '0.9em'  }}>GIÁ TRỊ:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>GIÁ TRỊ:</label>
                             <input type="text" value={productValue} onChange={(e) => setProductValue(e.target.value)} style={inputStyle2} />
                         </div>
 
                         <h3 style={{ textAlign: 'center' }}>VIÊN CHỦ</h3>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px',fontSize: '0.9em'  }}>MÃ VIÊN CHỦ:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>MÃ VIÊN CHỦ:</label>
                             <input type="text" value={mainStoneCode} onChange={(e) => setMainStoneCode(e.target.value)} style={inputStyle2} />
                         </div>
 
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px' ,fontSize: '0.9em' }}>KIỂM ĐỊNH:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>KIỂM ĐỊNH:</label>
                             <input type="text" value={certification} onChange={(e) => setCertification(e.target.value)} style={inputStyle2} />
                         </div>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px' ,fontSize: '0.9em' }}>GIÁ TRỊ:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>GIÁ TRỊ:</label>
                             <input type="text" value={mainStoneValue} onChange={(e) => setMainStoneValue(e.target.value)} style={inputStyle2} />
                         </div>
 
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px',fontSize: '0.9em'  }}>TỔNG GIÁ TRỊ:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>TỔNG GIÁ TRỊ:</label>
                             <input type="text" value={totalValue} onChange={(e) => setTotalValue(e.target.value)} style={inputStyle2} />
                         </div>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px',fontSize: '0.9em'  }}>CỌC TRƯỚC:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>CỌC TRƯỚC:</label>
                             <input type="text" value={deposit} onChange={(e) => setDeposit(e.target.value)} style={inputStyle2} />
                         </div>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ display: 'inline-block', width: '160px',fontSize: '0.9em'  }}>CÒN LẠI:</label>
+                            <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}>CÒN LẠI:</label>
                             <input type="text" value={remainingBalance} onChange={(e) => setRemainingBalance(e.target.value)} style={inputStyle2} />
                         </div>
 
@@ -396,7 +437,20 @@ const DepositDocument = () => {
                 width: '100%',
                 height: '100px',
             }}>
+                <div style={{
+                    background: `url(${footer}) no-repeat center center`,
+                    backgroundSize: 'cover',
+                    color: '#D4AF37',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100px',
+                }}>
 
+                    <div style={{ marginTop: '2px', textAlign: 'right', marginRight: '10px' }}>
+                        <QRCodeCanvas value={qrData} size={82} />
+                    </div>
+
+                </div>
 
 
             </div>
