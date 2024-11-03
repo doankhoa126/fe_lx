@@ -200,7 +200,7 @@ const DepositDocument = () => {
     style={titleStyle}
     <
 /> */}
-                <h1 style={titleStyle}>GIẤY ĐẢM BẢO</h1>
+                <h1 style={titleStyle}>GIẤY ĐẶT CỌC</h1>
                 {/* Nếu có các thành phần khác trong header, bạn có thể thêm vào đây */}
 
                 <div style={{ textAlign: 'center' }}>
