@@ -116,10 +116,11 @@ const WarrantyDocument = () => {
         background: 'linear-gradient(to right, #D4AF37, #FFE5B4)',
         color: '#000',
         padding: '4px',
+        borderRadius:'8px',
         marginBottom: '5px',
         fontWeight: 'bold',
         textAlign: 'center',
-        fontSize: '1em',
+        fontSize: '1.1em',
     };
 
 
@@ -407,8 +408,8 @@ const WarrantyDocument = () => {
                 height: '100px',
             }}>
 
-                <div style={{ marginTop: '2px', textAlign: 'right', marginRight: '35px' }}>
-                    <QRCodeCanvas value={qrData} size={75} />
+                <div style={{ marginTop: '2px', textAlign: 'right', marginRight: '45px' }}>
+                    <QRCodeCanvas value={qrData} size={82} />
                 </div>
 
             </div>

@@ -446,8 +446,8 @@ const DepositDocument = () => {
                     height: '100px',
                 }}>
 
-                    <div style={{ marginTop: '2px', textAlign: 'right', marginRight: '10px' }}>
-                        <QRCodeCanvas value={qrData} size={82} />
+                    <div style={{ marginTop: '2px', textAlign: 'right', marginRight: '35px' }}>
+                        <QRCodeCanvas value={qrData} size={75} />
                     </div>
 
                 </div>
