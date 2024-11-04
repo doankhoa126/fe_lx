@@ -31,6 +31,9 @@ const WarrantyDocument = () => {
     const [vtsDoiMoi, setVtsDoiMoi] = useState('');
     const [kimCuongThuLai, setKimCuongThuLai] = useState('');
     const [kimCuongDoiLon, setKimCuongDoiLon] = useState('');
+    const [documentId, setDocumentId] = useState(''); // New state for document ID
+
+
 
     useEffect(() => {
         const today = new Date();
@@ -38,6 +41,18 @@ const WarrantyDocument = () => {
         const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Tháng trong JS bắt đầu từ 0
         const year = today.getFullYear();
         setCurrentDate(`TP. HCM, Ngày ${day} Tháng ${month} Năm ${year}`);
+        const generateDocumentId = () => {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const length = Math.floor(Math.random() * (14 - 6 + 1)) + 6; // Random length between 6 and 10
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        };
+
+        const uniqueId = generateDocumentId();
+        setDocumentId(uniqueId);
     }, []);
 
     const handleDateChange = (e) => {
@@ -148,6 +163,12 @@ const WarrantyDocument = () => {
 
 
     // Dữ liệu mã QR
+    const dataQrNew = JSON.stringify({
+        customerName,
+        customerPhone,
+        documentId
+    })
+
     const qrData = JSON.stringify({
         customerName,
         customerPhone,
@@ -165,7 +186,8 @@ const WarrantyDocument = () => {
         mainStoneValue,
         totalValue,
         valueInWords,
-        currentDate
+        currentDate,
+        documentId
     });
     useEffect(() => {
         if (qrData) {
@@ -408,8 +430,9 @@ const WarrantyDocument = () => {
                 height: '100px',
             }}>
 
-                <div style={{ marginTop: '2px', textAlign: 'right', marginRight: '45px' }}>
-                    <QRCodeCanvas value={qrData} size={82} />
+                <div style={{ marginTop: '2px', textAlign: 'right', marginRight: '40px' }}>
+                    <QRCodeCanvas value={dataQrNew} size={65} />
+                    <p style={{ fontSize: '13px', color: '#C0C0C0', textAlign: 'right', marginTop: '2px' }}>{documentId}</p>
                 </div>
 
             </div>

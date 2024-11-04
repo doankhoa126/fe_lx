@@ -61,7 +61,8 @@ const PrintPage = () => {
                 tonggiatri: data.totalValue,
                 coctruoc: data.deposit || '', // Có thể là một trường bổ sung, nếu không tồn tại thì đặt giá trị mặc định
                 conlai: data.remainingBalance || '',
-                loai_giay: data.selectedDocument || 'warranty' // Lấy từ dữ liệu hoặc đặt mặc định là 'warranty'
+                loai_giay: data.selectedDocument || 'warranty',
+                ma_giay : data.documentId // Lấy từ dữ liệu hoặc đặt mặc định là 'warranty'
             };
     
             // 4. Lưu dữ liệu vào Supabase

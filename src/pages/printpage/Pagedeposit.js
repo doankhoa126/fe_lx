@@ -36,6 +36,8 @@ const DepositDocument = () => {
     const [kimCuongDoiLon, setKimCuongDoiLon] = useState('');
     const [combinedSpecification, setCombinedSpecification] = useState(''); // Thêm biến trạng thái này
 
+    const [documentId, setDocumentId] = useState(''); // New state for document ID
+
     const handleSizeChange = (index, value) => {
         const newValues = [...sizeValues];
         newValues[index] = value;
@@ -60,12 +62,19 @@ const DepositDocument = () => {
         const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Tháng trong JS bắt đầu từ 0
         const year = today.getFullYear();
         setCurrentDate(`TP. HCM, Ngày ${day} Tháng ${month} Năm ${year}`);
+        const generateDocumentId = () => {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const length = Math.floor(Math.random() * (14 - 6 + 1)) + 6; // Random length between 6 and 10
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        };
+
+        const uniqueId = generateDocumentId();
+        setDocumentId(uniqueId);
     }, []);
-
-    const handleDateChange = (e) => {
-        setCurrentDate(e.target.value);
-    };
-
 
     const containerStyle = {
         width: '297mm',
@@ -136,6 +145,7 @@ const DepositDocument = () => {
         background: 'linear-gradient(to right, #D4AF37, #FFE5B4)',
         color: '#000',
         padding: '4px',
+        borderRadius:'8px',
         marginBottom: '5px',
         fontWeight: 'bold',
         textAlign: 'center',
@@ -182,7 +192,11 @@ const DepositDocument = () => {
         setCombinedSpecification(newCombinedSpecification);
     }, [specification, specification1, specification2]);
 
-
+    const dataQrNew = JSON.stringify({
+        customerName,
+        customerPhone,
+        documentId
+    })
     const qrData = JSON.stringify({
         customerName,
         customerPhone,
@@ -201,7 +215,8 @@ const DepositDocument = () => {
         totalValue,
         deposit,
         remainingBalance,
-        currentDate
+        currentDate,
+        documentId
     }); if (combinedSpecification) {
         localStorage.setItem('latestQrData', qrData);
         console.log("QR data saved to localStorage:", qrData);
@@ -215,7 +230,7 @@ const DepositDocument = () => {
 
     return (
         <div id="depositDocument" style={{ margin: '0 auto', fontFamily: '"EB Garamond", serif', background: '#000', color: '#333', paddingRight: '0.5mm', paddingLeft: '4mm', paddingTop: '0.5mm', paddingBottom: '0.5mm', boxSizing: 'border-box', width: '390mm', }}>
-            <div className="header" style={{ background: `url(${header}) no-repeat center center`, backgroundSize: 'cover', color: '#D4AF37', padding: '5mm 5mm', display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center' }}>
+            <div className="header" style={{ background: `url(${header}) no-repeat center center`, backgroundSize: 'cover', color: '#D4AF37', padding: '6px 6px', display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center' }}>
                 <div className="company-info" style={{ textAlign: 'center', paddingRight: '8vw' }}>
                     <h3 style={{ margin: 0, fontSize: '1.7em', fontWeight: 'bold' }}>CÔNG TY TNHH TÂM LUXURY</h3>
                     <p style={{ margin: '5px 0', fontSize: '1.3em' }}>CHUYÊN KIM CƯƠNG THIÊN NHIÊN</p>
@@ -446,9 +461,10 @@ const DepositDocument = () => {
                     height: '100px',
                 }}>
 
-                    <div style={{ marginTop: '2px', textAlign: 'right', marginRight: '35px' }}>
-                        <QRCodeCanvas value={qrData} size={75} />
-                    </div>
+<div style={{ marginTop: '2px', textAlign: 'right', marginRight: '40px' }}>
+                    <QRCodeCanvas value={dataQrNew} size={65} />
+                    <p style={{ fontSize: '13px', color: '#C0C0C0', textAlign: 'right', marginTop: '2px' }}>{documentId}</p>
+                </div>
 
                 </div>
 
