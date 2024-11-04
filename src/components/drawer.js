@@ -9,16 +9,21 @@ import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { useNavigate } from 'react-router-dom'; // Thêm import này
+import { useNavigate } from 'react-router-dom';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import PrintIcon from '@mui/icons-material/Print';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LoginIcon from '@mui/icons-material/Login';
 
-const drawerWidth = "16vw"; // Tăng kích thước Drawer lên 320px
+const drawerWidth = "16vw";
 
 function ResponsiveDrawer(props) {
-  const { window, children } = props; // Lấy props children
+  const { window, children } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const navigate = useNavigate();
 
@@ -31,23 +36,44 @@ function ResponsiveDrawer(props) {
       <Toolbar />
       <Divider />
       <List>
-        {['PrintPage', 'Dashboard'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton onClick={() => {
-              if (text === 'PrintPage') {
-                navigate('printpage'); // Điều hướng tới PrintPage
-              }
-              if (text === 'Dashboard') {
-                navigate('dashboard'); // Điều hướng tới Dashboard
-              }
-              // Bạn có thể thêm điều hướng cho các mục khác tại đây
-            }}>
-              <ListItemText primary={text} />
+        {/* Dashboard */}
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('dashboard')}>
+            <ListItemIcon><DashboardIcon /></ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItemButton>
+        </ListItem>
+
+        {/* Print Page */}
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('printpage')}>
+            <ListItemIcon><PrintIcon /></ListItemIcon>
+            <ListItemText primary="Print Page" />
+          </ListItemButton>
+        </ListItem>
+
+        <Divider />
+
+        {/* Function Section */}
+        <Typography variant="body2" sx={{ padding: '10px 16px', color: 'gray' }}>Function</Typography>
+        <List sx={{ pl: 2 }}>
+          {/* Register */}
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => navigate('register')}>
+              <ListItemIcon><AccountCircleIcon /></ListItemIcon>
+              <ListItemText primary="Register" />
             </ListItemButton>
           </ListItem>
-        ))}
+
+          {/* Login */}
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => navigate('login')}>
+              <ListItemIcon><LoginIcon /></ListItemIcon>
+              <ListItemText primary="Login" />
+            </ListItemButton>
+          </ListItem>
+        </List>
       </List>
-      <Divider />
     </div>
   );
 
@@ -67,29 +93,25 @@ function ResponsiveDrawer(props) {
       <Drawer
         variant="temporary"
         open={mobileOpen}
-        onClose={() => setMobileOpen(false)}
+        onClose={handleDrawerToggle}
         sx={{
           '& .MuiDrawer-paper': {
-            width: drawerWidth, // Sử dụng width mới
+            width: drawerWidth,
           },
         }}
       >
         {drawer}
       </Drawer>
- 
+
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
-        {children} {/* Hiển thị nội dung routes ở đây */}
+        {children}
       </Box>
     </Box>
   );
 }
 
 ResponsiveDrawer.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * Remove this when copying and pasting into your project.
-   */
   window: PropTypes.func,
 };
 

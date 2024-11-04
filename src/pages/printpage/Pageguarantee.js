@@ -71,7 +71,7 @@ const WarrantyDocument = () => {
     const titleStyle = {
         textAlign: 'center',
         color: '#D4AF37',
-        fontSize: '2.3em',
+        fontSize: '2.2em',
         border: 'none',
         background: 'none',
         width: '100%',
@@ -85,7 +85,7 @@ const WarrantyDocument = () => {
         border: 'none',
         width: '100%',
         height: '28px',
-        backgroundColor: '#F8F8FF',
+        backgroundColor: '#fcfcfc',
         padding: '2px',
         fontSize: '16px',
         marginBottom: '3px',
@@ -95,21 +95,23 @@ const WarrantyDocument = () => {
         border: 'none',
         width: '80%',
         height: '25px',
-        backgroundColor: '#F8F8FF',
+        backgroundColor: '#fcfcfc',
         padding: '2px',
         fontSize: '15px',
         marginBottom: '3px',
     };
+
     const inputStyle3 = {
         borderBottom: '1px dotted #999',
         border: 'none',
         width: '100%',
         height: '25px',
-        backgroundColor: '#F8F8FF',
+        backgroundColor: '#fcfcfc',
         padding: '2px',
         fontSize: '15px',
         marginBottom: '3px',
     };
+
     const sectionHeaderStyle = {
         background: 'linear-gradient(to right, #D4AF37, #FFE5B4)',
         color: '#000',
@@ -172,7 +174,7 @@ const WarrantyDocument = () => {
     }, [qrData]);
     return (
         <div id="warrantyDocument" style={{ margin: '0 auto', fontFamily: '"EB Garamond", serif', background: '#000', color: '#333', paddingRight: '0.5mm', paddingLeft: '4mm', paddingTop: '0.5mm', paddingBottom: '0.5mm', boxSizing: 'border-box', width: '390mm', }}>
-            <div className="header" style={{ background: `url(${header}) no-repeat center center`, backgroundSize: 'cover', color: '#D4AF37', padding: '5mm 5mm', display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center' }}>
+            <div className="header" style={{ background: `url(${header}) no-repeat center center`, backgroundSize: 'cover', color: '#D4AF37', padding: '6px 6px', display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center' }}>
                 <div className="company-info" style={{ textAlign: 'center', paddingRight: '8vw' }}>
                     <h3 style={{ margin: 0, fontSize: '1.7em', fontWeight: 'bold' }}>CÔNG TY TNHH TÂM LUXURY</h3>
                     <p style={{ margin: '5px 0', fontSize: '1.3em' }}>CHUYÊN KIM CƯƠNG THIÊN NHIÊN</p>
@@ -199,7 +201,7 @@ const WarrantyDocument = () => {
     <
 /> */}
 
-                <h1 style={titleStyle}>GIẤY ĐẢM BẢO</h1>
+                <h2 style={titleStyle}>GIẤY ĐẢM BẢO</h2>
                 {/* Nếu có các thành phần khác trong header, bạn có thể thêm vào đây */}
 
                 <div style={{ textAlign: 'center' }}>
@@ -301,7 +303,8 @@ const WarrantyDocument = () => {
                             <input type="text" value={certification} onChange={(e) => setCertification(e.target.value)} style={inputStyle2} />
                         </div>
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <input type="text" value={certification1} onChange={(e) => setCertification1(e.target.value)} style={inputStyle3} />
+                        <label style={{ display: 'inline-block', width: '160px', fontSize: '0.9em' }}></label>
+                            <input type="text" value={certification1} onChange={(e) => setCertification1(e.target.value)} style={inputStyle2} />
                         </div>
 
                         <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
@@ -348,10 +351,11 @@ const WarrantyDocument = () => {
                                     src={productImage}
                                     alt="Product Image"
                                     style={{
-                                        width: '100%',
-                                        height: '42vh',
+                                        width: '80%',
+                                        height: 'auto',
                                         objectFit: 'contain',
-                                        border: 'none'
+                                        border: 'none',
+                                        maxHeight : '360px'
                                     }}
                                 />
                             ) : (
@@ -403,7 +407,7 @@ const WarrantyDocument = () => {
                 height: '100px',
             }}>
 
-                <div style={{ marginTop: '2px', textAlign: 'right', marginRight: '10px' }}>
+                <div style={{ marginTop: '2px', textAlign: 'right', marginRight: '35px' }}>
                     <QRCodeCanvas value={qrData} size={75} />
                 </div>
 
