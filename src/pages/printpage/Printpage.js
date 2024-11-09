@@ -87,7 +87,7 @@ const PrintPage = () => {
         saveDataFromLocalStorageToSupabase()
         // Bước 1: Xuất trang đầu tiên (WarrantyDocument)
         html2canvas(input, {
-            scale: 16.67, // Tăng độ phân giải (1600/96)
+            scale: 6, // Tăng độ phân giải (1600/96)
             useCORS: true, // Cho phép sử dụng hình ảnh cross-origin
         }).then((canvas) => {
             const imgData = canvas.toDataURL('image/png');
